@@ -1,49 +1,23 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const connection = require('./db');
+const cors = require('cors');
+const router = require('./router/endpoint');
 
 const app = express();
 dotenv.config(); 
 
-app.get('/', async (req, res) => {
-    try {
-        return res.status(200).json({
-            message: "server up and running"
-        })
-    } catch (error) {
-        return res.status(500).json({
-            message: "internal server error", 
-            status: error
-        })
-    }
-})
+const corsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204,
+};
 
-app.get('/users', async (req, res) => {
-    try {
-        const sql = "SELECT * FROM users"; 
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(router);
 
-        const data = await new Promise((resolve, reject) => {
-            connection.query(sql, (error, result) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(result);
-                }
-            })
-        })
-        return res.status(200).json({
-            message: "success to get data", 
-            data: data
-        })
-    } catch (error) {
-        return res.status(500).json({
-            message: "internal server error", 
-            status: error
-        })
-    }
-})
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const host = process.env.HOST; 
 
 app.listen(port, host, () => {
