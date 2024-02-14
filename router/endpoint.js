@@ -12,5 +12,10 @@ router.post('/login', loginRegister.login);
 const userController = require('../controller/userController');
 router.get('/user', verifyAccessToken, userController.getAllUsers);
 router.get('/user/:id', verifyAccessToken, userController.getUserById);
+router.post('/user', verifyAccessToken, userController.addUser);
+router.put('/user/:id', verifyAccessToken, userController.updateUser);
+router.delete('/user/:id', verifyAccessToken, userController.deleteUser);
+
+
 
 module.exports = router;
