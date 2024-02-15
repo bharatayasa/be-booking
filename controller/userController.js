@@ -120,9 +120,7 @@ module.exports = {
                 });
             }
             const {username, name, email, password} = req.body; 
-            
             const hashedPassword = await bcrypt.hash(password, saltRounds); 
-            
             const sql = "UPDATE users SET username = ?, name = ?, email = ?, password = ? WHERE id_users = ?"; 
             
             const data = await new Promise((resolve, reject) => {
