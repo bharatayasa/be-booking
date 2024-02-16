@@ -8,7 +8,7 @@ router.get('/', server.server);
 const loginRegister = require('../controller/loginRegisController');
 router.post('/register', loginRegister.register);
 router.post('/login', loginRegister.login);
-router.get('/me', loginRegister.getMe);
+router.get('/me', verifyAccessToken, loginRegister.getMe);
 
 const userController = require('../controller/userController');
 

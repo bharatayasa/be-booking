@@ -74,14 +74,14 @@ module.exports = {
                 role    : user.role
             };
             
-            const accessToken = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+            const Authorization = jwt.sign(payload, secretKey, { expiresIn: '1h' });
             
             return res.status(200).json({
                 status: 'success',
                 message: 'User logged successfully',
                 role: user.role,
                 token: {
-                    accessToken
+                    Authorization
                 }
             });
         } catch (error) {
@@ -94,32 +94,23 @@ module.exports = {
     }, 
     getMe: async (req, res) => {
         try {
-            const id = req.user.id;
-            const sql = "SELECT * FROM users WHERE id_users = ?";
-            
+            const userId = req.user.userId;
             const data = await new Promise((resolve, reject) => {
-                connection.query(sql, id, (err, result) => {
+                connection.query('SELECT id_users, username, name, email, role FROM users WHERE id_users = ?', [userId], (err, results) => {
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(result);
+                        resolve(results);
                     }
                 });
             });
-            
-            if (data.length === 0) {
-                return res.status(404).json({ 
-                    status: 'error', 
-                    message: 'Resource not found' 
-                });
-            }
             
             const user = data[0];
             return res.status(200).json({
                 status: 'success',
                 message: 'User retrieved',
                 data: {
-                    id: user.id,
+                    id_users: user.id_users,
                     username: user.username,
                     name: user.name,
                     email: user.email,
@@ -128,8 +119,8 @@ module.exports = {
             });
         } catch (error) {
             console.error('Error fetching user data: ', error);
-            return res.status(500).json({
-                status: 'error',
+            return res.status(500).json({ 
+                status: 'error', 
                 message: 'Internal Server Error' 
             });
         }
