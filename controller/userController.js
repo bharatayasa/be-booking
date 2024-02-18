@@ -49,7 +49,7 @@ module.exports = {
 
             const id = req.params.id;
             const sql = "SELECT * FROM users WHERE id_users = ?";
-
+            
             const data = await new Promise((resolve, reject) => {
                 connection.query(sql, id, (error, result) => {
                     if (error) {
@@ -155,7 +155,7 @@ module.exports = {
         try {
             const id = req.params.id; 
             const sql = "DELETE FROM users WHERE id_users = ?"; 
-
+            
             const data = await new Promise((resolve, reject) => {
                 connection.query(sql, id, (error, result) => {
                     if (error) {
@@ -175,5 +175,5 @@ module.exports = {
                 status: error
             })
         }
-    }
+    }, 
 }

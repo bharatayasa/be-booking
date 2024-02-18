@@ -52,8 +52,8 @@ module.exports = {
             
             if (data.length === 0) {
                 return res.status(401).json({ 
-                    status: 'error', 
-                    message: 'Authentication failed. User not found.' 
+                    status  : 'error', 
+                    message : 'Authentication failed. User not found.' 
                 });
             }
             
@@ -62,8 +62,8 @@ module.exports = {
             
             if (!isPasswordValid) {
                 return res.status(401).json({ 
-                    message: 'Authentication failed. Incorrect password', 
-                    status: "error",
+                    message : 'Authentication failed. Incorrect password', 
+                    status  : "error",
                 });
             }
             
@@ -94,19 +94,20 @@ module.exports = {
     }, 
     getMe: async (req, res) => {
         try {
-            const userId = req.user.userId;
+            const email = req.user.email;
+            const sql = "SELECT * FROM users WHERE email = ?";
+
             const data = await new Promise((resolve, reject) => {
-                connection.query('SELECT id_users, username, name, email, role FROM users WHERE id_users = ?', [userId], (err, results) => {
-                    if (err) {
-                        reject(err);
+                connection.query(sql, [email], (error, result) => {
+                    if (error) {
+                        reject(error);
                     } else {
-                        resolve(results);
+                        resolve(result);
                     }
-                });
-            });
-            
+                })
+            })
             const user = data[0];
-            return res.status(200).json({
+            res.status(200).json({
                 status: 'success',
                 message: 'User retrieved',
                 data: {
@@ -114,15 +115,20 @@ module.exports = {
                     username: user.username,
                     name: user.name,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    created_at: user.created_at,
+                    updated_at: user.updated_at,
+                    status: user.status,
+                    role: user.role,
+                    email_verified: user.email_verified
                 },
             });
         } catch (error) {
             console.error('Error fetching user data: ', error);
-            return res.status(500).json({ 
-                status: 'error', 
-                message: 'Internal Server Error' 
+            return res.status(500).json({
+                status: 'error',
+                message: 'Internal Server Error'
             });
         }
-    }
+    },
 };
