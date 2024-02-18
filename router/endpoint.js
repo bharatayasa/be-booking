@@ -11,7 +11,6 @@ router.post('/login', loginRegister.login);
 router.get('/me', verifyAccessToken, loginRegister.getMe);
 
 const userController = require('../controller/userController');
-
 router.get('/user', verifyAccessToken, userController.getAllUsers);
 router.get('/user/:id', verifyAccessToken, userController.getUserById);
 router.post('/user', verifyAccessToken, userController.addUser);
