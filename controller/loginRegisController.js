@@ -74,14 +74,14 @@ module.exports = {
                 role    : user.role
             };
             
-            const Authorization = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+            const accessToken = jwt.sign(payload, secretKey, { expiresIn: '1h' });
             
             return res.status(200).json({
                 status: 'success',
                 message: 'User logged successfully',
                 role: user.role,
-                token: {
-                    Authorization
+                data: {
+                    accessToken
                 }
             });
         } catch (error) {
